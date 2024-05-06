@@ -10,7 +10,7 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/johnoppenheimer/boustifaille/web/point"
+import "github.com/johnoppenheimer/boustifaille/database/models"
 
 func head() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -25,7 +25,7 @@ func head() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<script src=\"https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js\"></script><script src=\"https://cdn.tailwindcss.com/3.4.3?plugins=typography@0.5.12\"></script><script src=\"https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js\" defer></script><script src=\"https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js\"></script><link href=\"https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css\" rel=\"stylesheet\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<script src=\"https://cdn.tailwindcss.com/3.4.3?plugins=typography@0.5.12\"></script><script src=\"https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js\"></script><link href=\"https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css\" rel=\"stylesheet\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -36,24 +36,24 @@ func head() templ.Component {
 	})
 }
 
-func loadPoints(points []point.Point) templ.ComponentScript {
+func loadPoints(restaurants []models.Restaurant) templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_loadPoints_a1bf`,
-		Function: `function __templ_loadPoints_a1bf(points){window._map.on("load", () => {
-	console.log("loading points", points);
+		Name: `__templ_loadPoints_6cde`,
+		Function: `function __templ_loadPoints_6cde(restaurants){window._map.on("load", () => {
+	console.log("loading points", restaurants);
 
 	window._map.addSource("restaurants", {
 		type: "geojson",
 		data: {
 			type: "FeatureCollection",
-			features: points.map((point) => ({
+			features: restaurants.map((r) => ({
 				type: "Feature",
 				geometry: {
 					type: "Point",
-					coordinates: [point.Longitude, point.Latitude],
+					coordinates: [r.Longitude, r.Latitude],
 				},
 				properties: {
-					title: point.Name,
+					title: r.Name,
 				},
 			})),
 		},
@@ -70,8 +70,8 @@ func loadPoints(points []point.Point) templ.ComponentScript {
 	});
 });
 }`,
-		Call:       templ.SafeScript(`__templ_loadPoints_a1bf`, points),
-		CallInline: templ.SafeScriptInline(`__templ_loadPoints_a1bf`, points),
+		Call:       templ.SafeScript(`__templ_loadPoints_6cde`, restaurants),
+		CallInline: templ.SafeScriptInline(`__templ_loadPoints_6cde`, restaurants),
 	}
 }
 
@@ -110,7 +110,7 @@ window._map = new maplibregl.Map({
 	}
 }
 
-func Index(points []point.Point) templ.Component {
+func Index(restaurants []models.Restaurant) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -133,15 +133,15 @@ func Index(points []point.Point) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for _, point := range points {
+			for _, restaurant := range restaurants {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><button type=\"button\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(point.Name)
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(restaurant.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index.templ`, Line: 81, Col: 44}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index.templ`, Line: 81, Col: 49}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -164,7 +164,7 @@ func Index(points []point.Point) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = loadPoints(points).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = loadPoints(restaurants).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

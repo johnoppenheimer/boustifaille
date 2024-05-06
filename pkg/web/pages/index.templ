@@ -1,31 +1,31 @@
 package pages
 
-import "github.com/johnoppenheimer/boustifaille/web/point"
+import "github.com/johnoppenheimer/boustifaille/database/models"
 
 templ head() {
-	<script src="https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js"></script>
+	// <script src="https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js"></script>
 	<script src="https://cdn.tailwindcss.com/3.4.3?plugins=typography@0.5.12"></script>
-	<script src="https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js" defer></script>
+	// <script src="https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js" defer></script>
 	<script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
 	<link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet"/>
 }
 
-script loadPoints(points []point.Point) {
+script loadPoints(restaurants []models.Restaurant) {
 window._map.on("load", () => {
-	console.log("loading points", points);
+	console.log("loading points", restaurants);
 
 	window._map.addSource("restaurants", {
 		type: "geojson",
 		data: {
 			type: "FeatureCollection",
-			features: points.map((point) => ({
+			features: restaurants.map((r) => ({
 				type: "Feature",
 				geometry: {
 					type: "Point",
-					coordinates: [point.Longitude, point.Latitude],
+					coordinates: [r.Longitude, r.Latitude],
 				},
 				properties: {
-					title: point.Name,
+					title: r.Name,
 				},
 			})),
 		},
@@ -72,17 +72,17 @@ window._map = new maplibregl.Map({
 });
 }
 
-templ Index(points []point.Point) {
+templ Index(restaurants []models.Restaurant) {
 	@Layout(head()) {
 		<div class="relative w-screen h-screen">
 			<div id="map" class="w-screen h-screen"></div>
 			<div class="w-1/5 text-white rounded-lg p-8 bg-neutral-900 absolute left-2 top-2 bottom-2">
-				for _, point := range points {
-					<div><button type="button">{ point.Name }</button></div>
+				for _, restaurant := range restaurants {
+					<div><button type="button">{ restaurant.Name }</button></div>
 				}
 			</div>
 		</div>
 		@loadMap()
-    @loadPoints(points)
+    @loadPoints(restaurants)
 	}
 }

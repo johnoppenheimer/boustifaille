@@ -1,39 +1,41 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
+	"github.com/charmbracelet/log"
+	"github.com/gin-gonic/gin"
+
+	"github.com/johnoppenheimer/boustifaille/database"
+	"github.com/johnoppenheimer/boustifaille/database/services"
+	"github.com/johnoppenheimer/boustifaille/web/gintemplrenderer"
 	"github.com/johnoppenheimer/boustifaille/web/pages"
-	"github.com/johnoppenheimer/boustifaille/web/point"
 )
 
-func getHandler(w http.ResponseWriter, r *http.Request) {
-	component := pages.Index(point.Points)
-	component.Render(r.Context(), w)
-}
-
-func postHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-
-	//
-
-	getHandler(w, r)
-}
-
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
-			postHandler(w, r)
-			return
+	db := database.InitDB()
+
+	log.SetLevel(log.DebugLevel)
+
+	engine := gin.Default()
+	ginHtmlRenderer := engine.HTMLRender
+	engine.HTMLRender = &gintemplrenderer.HTMLTemplRenderer{FallbackHtmlRenderer: ginHtmlRenderer}
+	engine.SetTrustedProxies(nil)
+
+	restaurantsService := services.NewRestaurantService(db)
+
+	engine.GET("/", func(c *gin.Context) {
+		restaurants, err := restaurantsService.All()
+		log.Debugf("restaurants: %v", restaurants)
+		if err != nil {
+			log.Errorf("Error getting all restaurants: %v", err)
 		}
 
-		getHandler(w, r)
+		c.HTML(http.StatusOK, "", pages.Index(restaurants))
 	})
 
-	fmt.Println("Listening on port 8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Printf("Error listening %v", err)
+	log.Info("Listening on port 8080")
+	if err := engine.Run(":8080"); err != nil {
+		log.Fatalf("Error listening %v", err)
 	}
 }

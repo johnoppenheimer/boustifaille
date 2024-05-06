@@ -15,7 +15,7 @@ dev-templ:
 alias dw := dev-web
 # Run web server and listen for changes
 dev-web:
-  watchexec -r --workdir ./pkg/web -e go go run .
+  watchexec -r -e go go run ./pkg/web
 
 # Launch CLI
 cli:
