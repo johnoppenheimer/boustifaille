@@ -7,7 +7,7 @@ type User struct {
 	ID   uint
 }
 
-type Restaurant struct {
+type Place struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	Name      string

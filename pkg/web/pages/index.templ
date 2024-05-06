@@ -10,15 +10,15 @@ templ head() {
 	<link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet"/>
 }
 
-script loadPoints(restaurants []models.Restaurant) {
+script loadPoints(places []models.Place) {
 window._map.on("load", () => {
-	console.log("loading points", restaurants);
+	console.log("loading points", places);
 
-	window._map.addSource("restaurants", {
+	window._map.addSource("places", {
 		type: "geojson",
 		data: {
 			type: "FeatureCollection",
-			features: restaurants.map((r) => ({
+			features: places.map((r) => ({
 				type: "Feature",
 				geometry: {
 					type: "Point",
@@ -32,8 +32,8 @@ window._map.on("load", () => {
 	});
 
 	window._map.addLayer({
-		id: "restaurants-layer",
-		source: "restaurants",
+		id: "places-layer",
+		source: "places",
 		type: "circle",
 		paint: {
 			"circle-radius": 10,
@@ -72,17 +72,17 @@ window._map = new maplibregl.Map({
 });
 }
 
-templ Index(restaurants []models.Restaurant) {
+templ Index(places []models.Place) {
 	@Layout(head()) {
 		<div class="relative w-screen h-screen">
 			<div id="map" class="w-screen h-screen"></div>
 			<div class="w-1/5 text-white rounded-lg p-8 bg-neutral-900 absolute left-2 top-2 bottom-2">
-				for _, restaurant := range restaurants {
-					<div><button type="button">{ restaurant.Name }</button></div>
+				for _, place := range places {
+					<div><button type="button">{ place.Name }</button></div>
 				}
 			</div>
 		</div>
 		@loadMap()
-    @loadPoints(restaurants)
+    @loadPoints(places)
 	}
 }

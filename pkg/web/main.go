@@ -22,16 +22,16 @@ func main() {
 	engine.HTMLRender = &gintemplrenderer.HTMLTemplRenderer{FallbackHtmlRenderer: ginHtmlRenderer}
 	engine.SetTrustedProxies(nil)
 
-	restaurantsService := services.NewRestaurantService(db)
+	placesService := services.NewPlaceService(db)
 
 	engine.GET("/", func(c *gin.Context) {
-		restaurants, err := restaurantsService.All()
-		log.Debugf("restaurants: %v", restaurants)
+		places, err := placesService.All()
+		log.Debugf("places: %v", places)
 		if err != nil {
-			log.Errorf("Error getting all restaurants: %v", err)
+			log.Errorf("Error getting all places: %v", err)
 		}
 
-		c.HTML(http.StatusOK, "", pages.Index(restaurants))
+		c.HTML(http.StatusOK, "", pages.Index(places))
 	})
 
 	log.Info("Listening on port 8080")

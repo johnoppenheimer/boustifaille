@@ -36,17 +36,17 @@ func head() templ.Component {
 	})
 }
 
-func loadPoints(restaurants []models.Restaurant) templ.ComponentScript {
+func loadPoints(places []models.Place) templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_loadPoints_6cde`,
-		Function: `function __templ_loadPoints_6cde(restaurants){window._map.on("load", () => {
-	console.log("loading points", restaurants);
+		Name: `__templ_loadPoints_e0ec`,
+		Function: `function __templ_loadPoints_e0ec(places){window._map.on("load", () => {
+	console.log("loading points", places);
 
-	window._map.addSource("restaurants", {
+	window._map.addSource("places", {
 		type: "geojson",
 		data: {
 			type: "FeatureCollection",
-			features: restaurants.map((r) => ({
+			features: places.map((r) => ({
 				type: "Feature",
 				geometry: {
 					type: "Point",
@@ -60,8 +60,8 @@ func loadPoints(restaurants []models.Restaurant) templ.ComponentScript {
 	});
 
 	window._map.addLayer({
-		id: "restaurants-layer",
-		source: "restaurants",
+		id: "places-layer",
+		source: "places",
 		type: "circle",
 		paint: {
 			"circle-radius": 10,
@@ -70,8 +70,8 @@ func loadPoints(restaurants []models.Restaurant) templ.ComponentScript {
 	});
 });
 }`,
-		Call:       templ.SafeScript(`__templ_loadPoints_6cde`, restaurants),
-		CallInline: templ.SafeScriptInline(`__templ_loadPoints_6cde`, restaurants),
+		Call:       templ.SafeScript(`__templ_loadPoints_e0ec`, places),
+		CallInline: templ.SafeScriptInline(`__templ_loadPoints_e0ec`, places),
 	}
 }
 
@@ -110,7 +110,7 @@ window._map = new maplibregl.Map({
 	}
 }
 
-func Index(restaurants []models.Restaurant) templ.Component {
+func Index(places []models.Place) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -133,15 +133,15 @@ func Index(restaurants []models.Restaurant) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for _, restaurant := range restaurants {
+			for _, place := range places {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><button type=\"button\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(restaurant.Name)
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(place.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index.templ`, Line: 81, Col: 49}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index.templ`, Line: 81, Col: 44}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -164,7 +164,7 @@ func Index(restaurants []models.Restaurant) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = loadPoints(restaurants).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = loadPoints(places).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
