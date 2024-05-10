@@ -3,7 +3,7 @@ package services
 import (
 	"gorm.io/gorm"
 
-	"github.com/johnoppenheimer/boustifaille/database/models"
+	"github.com/johnoppenheimer/boustifaille/internal/database/models"
 )
 
 type PlaceService struct {

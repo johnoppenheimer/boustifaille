@@ -5,7 +5,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
-	"github.com/johnoppenheimer/boustifaille/database/models"
+	"github.com/johnoppenheimer/boustifaille/internal/database/models"
 )
 
 func InitDB() *gorm.DB {

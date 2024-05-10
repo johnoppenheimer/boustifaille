@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/johnoppenheimer/boustifaille/database/models"
+	"github.com/johnoppenheimer/boustifaille/internal/database/models"
 	"gorm.io/gorm"
 )
 

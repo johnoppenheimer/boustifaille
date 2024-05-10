@@ -6,10 +6,10 @@ import (
 	"github.com/charmbracelet/log"
 	"github.com/gin-gonic/gin"
 
-	"github.com/johnoppenheimer/boustifaille/database"
-	"github.com/johnoppenheimer/boustifaille/database/services"
-	"github.com/johnoppenheimer/boustifaille/web/gintemplrenderer"
-	"github.com/johnoppenheimer/boustifaille/web/pages"
+	"github.com/johnoppenheimer/boustifaille/cmd/web/gintemplrenderer"
+	"github.com/johnoppenheimer/boustifaille/cmd/web/pages"
+	"github.com/johnoppenheimer/boustifaille/internal/database"
+	"github.com/johnoppenheimer/boustifaille/internal/database/services"
 )
 
 func main() {
